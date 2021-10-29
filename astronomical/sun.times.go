@@ -37,7 +37,7 @@ func (calc TimeCalculator) GetMidDayTime(dayPortion float64) float64 {
 	return midDay
 }
 
-func (calc TimeCalculator) GetSunAngleTime(angle float64, dayPortion float64, direction string) float64 {
+func (calc TimeCalculator) GetSunAngleTime(dayPortion float64, angle float64, direction string) float64 {
 	jTime := calc.jDate + dayPortion
 
 	decl := NewSunPosition(jTime).Declination()
@@ -52,7 +52,7 @@ func (calc TimeCalculator) GetSunAngleTime(angle float64, dayPortion float64, di
 	return midDay + t
 }
 
-func (calc TimeCalculator) GetAsrTime(factor float64, dayPortion float64) float64 {
+func (calc TimeCalculator) GetAsrTime(dayPortion float64, factor float64) float64 {
 	jTime := calc.jDate + dayPortion
 
 	decl := NewSunPosition(jTime).Declination()
