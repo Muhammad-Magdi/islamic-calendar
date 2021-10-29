@@ -16,19 +16,19 @@ func NewSunPosition(julianDay float64) SunPosition {
 
 	L := dmath.FixAngle(q + 1.915*dmath.Sin(g) + 0.02*dmath.Sin(2*g))
 	e := 23.439 - 0.00000036*D
-	dec := dmath.ASin(dmath.Sin(e) * dmath.Sin(L))
+	decl := dmath.ASin(dmath.Sin(e) * dmath.Sin(L))
 
 	RA := dmath.ATan2(dmath.Cos(e)*dmath.Sin(L), dmath.Cos(L)) / 15
 	eq := q/15 - dmath.FixHour(RA)
 
-	p.setDeclination(dec)
+	p.setDeclination(decl)
 	p.setEquation(eq)
 
 	return p
 }
 
-func (p *SunPosition) setDeclination(dec float64) {
-	p.declination = dec
+func (p *SunPosition) setDeclination(decl float64) {
+	p.declination = decl
 }
 
 func (p *SunPosition) setEquation(eq float64) {
