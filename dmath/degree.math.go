@@ -3,7 +3,7 @@ package dmath
 import "math"
 
 func ToRadian(d float64) float64 {
-	return float64(d) * math.Pi / 180.0
+	return d * math.Pi / 180.0
 }
 
 func ToDegree(r float64) float64 {
@@ -35,11 +35,11 @@ func ATan(x float64) float64 {
 }
 
 func ACot(x float64) float64 {
-	return ToDegree(1.0 / math.Atan(1/x))
+	return ToDegree(math.Atan(1 / x))
 }
 
 func ATan2(y, x float64) float64 {
-	return ToDegree(1.0 / math.Atan2(y, x))
+	return ToDegree(math.Atan2(y, x))
 }
 
 func FixAngle(a float64) float64 {
