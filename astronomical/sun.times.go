@@ -58,7 +58,7 @@ func (calc TimeCalculator) GetAsrTime(dayPortion float64, factor float64) float6
 	decl := NewSunPosition(jTime).Declination()
 	angle := -dmath.ACot(factor + dmath.Tan(math.Abs(calc.st.Lat-decl)))
 
-	sunAngle := calc.GetSunAngleTime(angle, dayPortion, DIRECTION_CW)
+	sunAngle := calc.GetSunAngleTime(dayPortion, angle, DIRECTION_CW)
 
 	return sunAngle
 }
