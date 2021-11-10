@@ -52,10 +52,11 @@ func NewPrayerTimesCalculator(confing astronomical.Spacetime) PrayerTimesCalcula
 }
 
 func (calc PrayerTimesCalculator) GetPrayerTimes() map[string]float64 {
+
 	dayPortions := calc.computeDayPortions()
 	prayerTimes := calc.computePrayerTimes(dayPortions)
-	prayerTimes = calc.fixTimezone(prayerTimes)
 	prayerTimes = calc.applyMethodShifts(prayerTimes)
+	prayerTimes = calc.fixTimezone(prayerTimes)
 	// prayerTimes = adjustHighLats(prayerTimes)
 
 	return prayerTimes
@@ -73,7 +74,7 @@ func (calc PrayerTimesCalculator) computeDayPortions() map[string]float64 {
 func (calc PrayerTimesCalculator) computePrayerTimes(dayPortions map[string]float64) map[string]float64 {
 	prayerTimes := map[string]float64{}
 
-	prayerTimes[DAY_TIME_IMSAK] = calc.astroCalculator.GetSunAngleTime(dayPortions[DAY_TIME_IMSAK], calc.defaultAngles[DAY_TIME_IMSAK], astronomical.DIRECTION_CCW)
+	// prayerTimes[DAY_TIME_IMSAK] = calc.astroCalculator.GetSunAngleTime(dayPortions[DAY_TIME_IMSAK], calc.defaultAngles[DAY_TIME_IMSAK], astronomical.DIRECTION_CCW)
 	prayerTimes[DAY_TIME_FAJR] = calc.astroCalculator.GetSunAngleTime(dayPortions[DAY_TIME_FAJR], calc.defaultAngles[DAY_TIME_FAJR], astronomical.DIRECTION_CCW)
 	prayerTimes[DAY_TIME_ISHRAQ] = calc.astroCalculator.GetSunAngleTime(dayPortions[DAY_TIME_ISHRAQ], calc.defaultAngles[DAY_TIME_ISHRAQ], astronomical.DIRECTION_CCW)
 
@@ -91,17 +92,18 @@ func (calc PrayerTimesCalculator) computePrayerTimes(dayPortions map[string]floa
 }
 
 func (calc PrayerTimesCalculator) applyMethodShifts(prayerTimes map[string]float64) map[string]float64 {
-	for prayerName := range prayerTimes {
-		if shift, exists := calc.prayerShift[prayerName]; exists {
-			prayerTimes[prayerName] = prayerTimes[shift.from] + shift.value/60
+	for prayerName, shift := range calc.prayerShift {
+		if _, exists := prayerTimes[shift.from]; !exists {
+			panic("TODO: some error!")
 		}
+		prayerTimes[prayerName] = prayerTimes[shift.from] + shift.value/60
 	}
 	return prayerTimes
 }
 
 func (calc PrayerTimesCalculator) fixTimezone(prayerTimes map[string]float64) map[string]float64 {
 	for prayerName := range prayerTimes {
-		prayerTimes[prayerName] += calc.stConfig.Timezone - calc.stConfig.Lng/15
+		prayerTimes[prayerName] += float64(calc.stConfig.Timezone) - calc.stConfig.Lng/15
 	}
 	return prayerTimes
 }
