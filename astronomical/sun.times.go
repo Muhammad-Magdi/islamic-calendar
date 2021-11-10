@@ -10,7 +10,7 @@ import (
 type Spacetime struct {
 	Lng      float64
 	Lat      float64
-	Timezone float64
+	Timezone int
 	Date     time.Time
 }
 
