@@ -22,6 +22,7 @@ func main() {
 
 	prayersRouter := prayers.NewPrayersRouter()
 	r.GET("/v0/prayer-times", prayersRouter.GetPrayerTimes)
+	r.GET("/v0/calculation-methods", prayersRouter.GetCalculationMethods)
 
 	r.Run(fmt.Sprintf(":%s", port))
 }

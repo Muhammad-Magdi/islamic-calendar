@@ -43,3 +43,9 @@ func (PrayersRouter) GetPrayerTimes(c *gin.Context) {
 
 	c.JSON(http.StatusOK, timesMap)
 }
+
+func (PrayersRouter) GetCalculationMethods(c *gin.Context) {
+	methods := GetCalculationMethodsMap()
+
+	c.JSON(http.StatusOK, methods)
+}
