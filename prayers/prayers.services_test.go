@@ -15,7 +15,7 @@ func TestComputePrayerTimes(t *testing.T) {
 	config := astronomical.Spacetime{
 		Lng:      cairoLng,
 		Lat:      cairoLat,
-		Timezone: float64(cairoTimezone),
+		Timezone: cairoTimezone,
 		Date:     time.Date(2021, 10, 31, 0, 0, 0, 0, time.FixedZone("CAI", 2*60*60)),
 	}
 

@@ -21,6 +21,7 @@ func main() {
 	r := gin.Default()
 
 	prayersRouter := prayers.NewPrayersRouter()
+	r.GET("/v0/prayer-times", prayersRouter.GetPrayerTimes)
 
 	r.Run(fmt.Sprintf(":%s", port))
 }
