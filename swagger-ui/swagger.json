@@ -52,6 +52,20 @@
             "name": "timezone",
             "default": 0,
             "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "method",
+            "description": "The calculation method to be followed",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "MWL",
+              "ISNA",
+              "EGSA",
+              "UQU",
+              "UOK"
+            ]
           }
         ],
         "summary": "returns a list of prayer times",
