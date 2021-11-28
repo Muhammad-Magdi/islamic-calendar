@@ -24,5 +24,7 @@ func main() {
 	r.GET("/v0/prayer-times", prayersRouter.GetPrayerTimes)
 	r.GET("/v0/calculation-methods", prayersRouter.GetCalculationMethods)
 
+	r.Static("/docs", "./swagger-ui")
+
 	r.Run(fmt.Sprintf(":%s", port))
 }

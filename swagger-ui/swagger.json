@@ -1,0 +1,128 @@
+{
+  "basePath": "/v0",
+  "host": "localhost:8080",
+  "info": {
+    "contact": {
+      "email": "Muhammad.Magdi1024@gmail.com",
+      "name": "Developer - Muhammad Magdi"
+    },
+    "description": "This API is used to fetch some important islamic calendar dates/times like prayers, sunnah-fasting-days and so on....",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "termsOfService": "http://swagger.io/terms/",
+    "title": "Islamic Calendar API",
+    "version": "1.0"
+  },
+  "paths": {
+    "/prayer-times": {
+      "get": {
+        "tags": [
+          "Prayers"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "date_from",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "date_to",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "lat",
+            "required": true,
+            "type": "number"
+          },
+          {
+            "in": "query",
+            "name": "long",
+            "required": true,
+            "type": "number"
+          },
+          {
+            "description": "A shift that will be applied to all of the `prayer-times`",
+            "in": "query",
+            "name": "timezone",
+            "default": 0,
+            "type": "integer"
+          }
+        ],
+        "summary": "returns a list of prayer times",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "required": [
+                "prayers"
+              ],
+              "properties": {
+                "prayers": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "date": {
+                        "type": "string",
+                        "example": "2021-11-14"
+                      },
+                      "fajr": {
+                        "type": "number",
+                        "example": 5.914674354401573
+                      },
+                      "ishraq": {
+                        "type": "number",
+                        "example": 7.2367177192914784
+                      },
+                      "dhuhr": {
+                        "type": "number",
+                        "example": 13.074235726409903
+                      },
+                      "asr": {
+                        "type": "number",
+                        "example": 16.415408737075584
+                      },
+                      "ghoroub": {
+                        "type": "number",
+                        "example": 18.910128283231305
+                      },
+                      "maghrib": {
+                        "type": "number",
+                        "example": 18.910128283231305
+                      },
+                      "isha": {
+                        "type": "number",
+                        "example": 20.091953790668324
+                      },
+                      "nesfullail": {
+                        "type": "number",
+                        "example": 25.073423001261393
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "ApiKeyAuth": {
+      "in": "header",
+      "name": "Authorization",
+      "type": "apiKey"
+    }
+  },
+  "swagger": "2.0"
+}
