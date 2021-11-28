@@ -86,6 +86,7 @@ func (calc PrayerTimesCalculator) computePrayerTimes(dayPortions map[string]floa
 	prayerTimes[DAY_TIME_MAGHRIB] = calc.astroCalculator.GetSunAngleTime(dayPortions[DAY_TIME_MAGHRIB], calc.defaultAngles[DAY_TIME_MAGHRIB], astronomical.DIRECTION_CW)
 	prayerTimes[DAY_TIME_ISHA] = calc.astroCalculator.GetSunAngleTime(dayPortions[DAY_TIME_ISHA], calc.defaultAngles[DAY_TIME_ISHA], astronomical.DIRECTION_CW)
 
+	// TODO: Fix bug, Refix hour
 	prayerTimes[DAY_TIME_NESFULLAIL] = prayerTimes[DAY_TIME_GHOROUB] + dmath.FixHour(prayerTimes[DAY_TIME_ISHRAQ]-prayerTimes[DAY_TIME_GHOROUB])/2
 
 	return prayerTimes
