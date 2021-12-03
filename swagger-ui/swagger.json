@@ -1,6 +1,14 @@
 {
-  "basePath": "/v0",
-  "host": "localhost:8080",
+  "servers": [
+    {
+      "url": "https://islamic-calendar.herokuapp.com/v0",
+      "description": "Production Environment"
+    },
+    {
+      "url": "localhost:8080/v0",
+      "description": "Local Environment"
+    }
+  ],
   "info": {
     "contact": {
       "email": "Muhammad.Magdi1024@gmail.com",
@@ -26,102 +34,115 @@
             "in": "query",
             "name": "date_from",
             "required": true,
-            "type": "string",
+            "schema": {
+              "type": "string"
+            },
             "description": "The starting date in the format `YYYY-MM-DD`"
           },
           {
             "in": "query",
             "name": "date_to",
             "required": true,
-            "type": "string",
+            "schema": {
+              "type": "string"
+            },
             "description": "The ending date in the format `YYYY-MM-DD`"
           },
           {
             "in": "query",
             "name": "lat",
             "required": true,
-            "type": "number"
+            "schema": {
+              "type": "number"
+            }
           },
           {
             "in": "query",
             "name": "long",
             "required": true,
-            "type": "number"
+            "schema": {
+              "type": "number"
+            }
           },
           {
             "description": "A shift that will be applied to all of the `prayer-times`",
             "in": "query",
             "name": "timezone",
-            "default": 0,
-            "type": "integer"
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
           },
           {
             "in": "query",
             "name": "method",
             "description": "The calculation method to be followed",
             "required": false,
-            "type": "string",
-            "enum": [
-              "MWL",
-              "ISNA",
-              "EGSA",
-              "UQU",
-              "UOK"
-            ]
+            "schema": {
+              "type": "string",
+              "enum": [
+                "MWL",
+                "ISNA",
+                "EGSA",
+                "UQU",
+                "UOK"
+              ]
+            }
           }
         ],
         "summary": "returns a list of prayer times",
-        "produces": [
-          "application/json"
-        ],
         "responses": {
           "200": {
             "description": "OK",
-            "schema": {
-              "required": [
-                "prayers"
-              ],
-              "properties": {
-                "prayers": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "date": {
-                        "type": "string",
-                        "example": "2021-11-14"
-                      },
-                      "fajr": {
-                        "type": "number",
-                        "example": 5.914674354401573
-                      },
-                      "ishraq": {
-                        "type": "number",
-                        "example": 7.2367177192914784
-                      },
-                      "dhuhr": {
-                        "type": "number",
-                        "example": 13.074235726409903
-                      },
-                      "asr": {
-                        "type": "number",
-                        "example": 16.415408737075584
-                      },
-                      "ghoroub": {
-                        "type": "number",
-                        "example": 18.910128283231305
-                      },
-                      "maghrib": {
-                        "type": "number",
-                        "example": 18.910128283231305
-                      },
-                      "isha": {
-                        "type": "number",
-                        "example": 20.091953790668324
-                      },
-                      "nesfullail": {
-                        "type": "number",
-                        "example": 25.073423001261393
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "required": [
+                    "prayers"
+                  ],
+                  "properties": {
+                    "prayers": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "date": {
+                            "type": "string",
+                            "example": "2021-11-14"
+                          },
+                          "fajr": {
+                            "type": "number",
+                            "example": 5.914674354401573
+                          },
+                          "ishraq": {
+                            "type": "number",
+                            "example": 7.2367177192914784
+                          },
+                          "dhuhr": {
+                            "type": "number",
+                            "example": 13.074235726409903
+                          },
+                          "asr": {
+                            "type": "number",
+                            "example": 16.415408737075584
+                          },
+                          "ghoroub": {
+                            "type": "number",
+                            "example": 18.910128283231305
+                          },
+                          "maghrib": {
+                            "type": "number",
+                            "example": 18.910128283231305
+                          },
+                          "isha": {
+                            "type": "number",
+                            "example": 20.091953790668324
+                          },
+                          "nesfullail": {
+                            "type": "number",
+                            "example": 25.073423001261393
+                          }
+                        }
                       }
                     }
                   }
@@ -133,12 +154,5 @@
       }
     }
   },
-  "securityDefinitions": {
-    "ApiKeyAuth": {
-      "in": "header",
-      "name": "Authorization",
-      "type": "apiKey"
-    }
-  },
-  "swagger": "2.0"
+  "openapi": "3.0.0"
 }
