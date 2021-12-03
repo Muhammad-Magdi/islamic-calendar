@@ -26,13 +26,15 @@
             "in": "query",
             "name": "date_from",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "The starting date in the format `YYYY-MM-DD`"
           },
           {
             "in": "query",
             "name": "date_to",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "The ending date in the format `YYYY-MM-DD`"
           },
           {
             "in": "query",
