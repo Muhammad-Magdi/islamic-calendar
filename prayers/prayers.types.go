@@ -8,7 +8,7 @@ type PrayerTimesQueryParams struct {
 	Timezone int       `json:"timezone" form:"timezone" binding:"required"` // Can be deduced given the long,lat
 	DateFrom time.Time `json:"date_from" form:"date_from" time_format:"2006-01-02" binding:"required"`
 	DateTo   time.Time `json:"date_to" form:"date_to" time_format:"2006-01-02" binding:"required"`
-	Method   string    `json:"method" form:"method"`
+	Method   string    `json:"method" form:"method" binding:"required,oneof=MWL ISNA EGSA UQU UOK"`
 }
 
 type DayPrayerTimesResponse struct {

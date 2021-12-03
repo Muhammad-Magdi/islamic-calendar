@@ -19,7 +19,10 @@ func TestComputePrayerTimes(t *testing.T) {
 		Date:     time.Date(2021, 10, 31, 0, 0, 0, 0, time.FixedZone("CAI", 2*60*60)),
 	}
 
-	calculator := NewPrayerTimesCalculator(config)
+	calculator := NewPrayerTimesCalculator(
+		GetCalculationMethod("EGSA"),
+		config,
+	)
 
 	expectedTimes := map[string]float64{
 		DAY_TIME_FAJR:    04.670996,

@@ -27,12 +27,14 @@ func (PrayersRouter) GetPrayerTimes(c *gin.Context) {
 
 	prayerTimes := PrayerTimesResponse{}
 	for day := params.DateFrom; !day.After(params.DateTo); day = day.Add(24 * time.Hour) {
-		calculator := NewPrayerTimesCalculator(astronomical.Spacetime{
-			Lng:      params.Long,
-			Lat:      params.Lat,
-			Timezone: params.Timezone,
-			Date:     day,
-		})
+		calculator := NewPrayerTimesCalculator(
+			GetCalculationMethod(params.Method),
+			astronomical.Spacetime{
+				Lng:      params.Long,
+				Lat:      params.Lat,
+				Timezone: params.Timezone,
+				Date:     day,
+			})
 		times := calculator.GetPrayerTimes()
 		prayerTimes.Prayers = append(prayerTimes.Prayers, DayPrayerTimesResponse{
 			Date:       day.Format(layoutISO),

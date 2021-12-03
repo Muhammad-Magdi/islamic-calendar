@@ -5,35 +5,24 @@ import (
 	"github.com/muhammad-magdi/islamic-calendar/dmath"
 )
 
-type Shift struct {
-	value float64
-	from  string
-}
-
 type PrayerTimesCalculator struct {
 	stConfig        astronomical.Spacetime
-	prayerShift     map[string]Shift // +/- mins of prayer shift
+	method          CalculationMethod
 	defaultAngles   map[string]float64
 	defaultTimes    map[string]float64
 	astroCalculator astronomical.TimeCalculator
 }
 
-func NewPrayerTimesCalculator(confing astronomical.Spacetime) PrayerTimesCalculator {
+func NewPrayerTimesCalculator(method CalculationMethod, confing astronomical.Spacetime) PrayerTimesCalculator {
 	timeCalculator := astronomical.NewTimeCalculator(confing)
 
 	calculator := PrayerTimesCalculator{
 		stConfig: confing,
-		prayerShift: map[string]Shift{
-			DAY_TIME_IMSAK:   {-10.0, DAY_TIME_FAJR},
-			DAY_TIME_MAGHRIB: {0, DAY_TIME_GHOROUB},
-		},
+		method:   method,
+
 		defaultAngles: map[string]float64{
-			DAY_TIME_IMSAK:   10,
-			DAY_TIME_FAJR:    19.5,
 			DAY_TIME_ISHRAQ:  0.833,
 			DAY_TIME_GHOROUB: 0.833,
-			DAY_TIME_MAGHRIB: 0,
-			DAY_TIME_ISHA:    17.5,
 		},
 		defaultTimes: map[string]float64{
 			DAY_TIME_IMSAK:   5,
@@ -55,7 +44,6 @@ func (calc PrayerTimesCalculator) GetPrayerTimes() map[string]float64 {
 
 	dayPortions := calc.computeDayPortions()
 	prayerTimes := calc.computePrayerTimes(dayPortions)
-	prayerTimes = calc.applyMethodShifts(prayerTimes)
 	prayerTimes = calc.fixTimezone(prayerTimes)
 	// prayerTimes = adjustHighLats(prayerTimes)
 
@@ -75,16 +63,27 @@ func (calc PrayerTimesCalculator) computePrayerTimes(dayPortions map[string]floa
 	prayerTimes := map[string]float64{}
 
 	// prayerTimes[DAY_TIME_IMSAK] = calc.astroCalculator.GetSunAngleTime(dayPortions[DAY_TIME_IMSAK], calc.defaultAngles[DAY_TIME_IMSAK], astronomical.DIRECTION_CCW)
-	prayerTimes[DAY_TIME_FAJR] = calc.astroCalculator.GetSunAngleTime(dayPortions[DAY_TIME_FAJR], calc.defaultAngles[DAY_TIME_FAJR], astronomical.DIRECTION_CCW)
+	if calc.method.FajrOffset.IsAngle() {
+		prayerTimes[DAY_TIME_FAJR] = calc.astroCalculator.GetSunAngleTime(dayPortions[DAY_TIME_FAJR], calc.method.FajrOffset.Angle(), astronomical.DIRECTION_CCW)
+	}
 	prayerTimes[DAY_TIME_ISHRAQ] = calc.astroCalculator.GetSunAngleTime(dayPortions[DAY_TIME_ISHRAQ], calc.defaultAngles[DAY_TIME_ISHRAQ], astronomical.DIRECTION_CCW)
 
 	prayerTimes[DAY_TIME_DHUHR] = calc.astroCalculator.GetMidDayTime(dayPortions[DAY_TIME_DHUHR])
-	asrFactor := 1.0 // In standard method
-	prayerTimes[DAY_TIME_ASR] = calc.astroCalculator.GetAsrTime(dayPortions[DAY_TIME_ASR], asrFactor)
+
+	prayerTimes[DAY_TIME_ASR] = calc.astroCalculator.GetAsrTime(dayPortions[DAY_TIME_ASR], float64(calc.method.AsrFactor))
 
 	prayerTimes[DAY_TIME_GHOROUB] = calc.astroCalculator.GetSunAngleTime(dayPortions[DAY_TIME_GHOROUB], calc.defaultAngles[DAY_TIME_GHOROUB], astronomical.DIRECTION_CW)
-	prayerTimes[DAY_TIME_MAGHRIB] = calc.astroCalculator.GetSunAngleTime(dayPortions[DAY_TIME_MAGHRIB], calc.defaultAngles[DAY_TIME_MAGHRIB], astronomical.DIRECTION_CW)
-	prayerTimes[DAY_TIME_ISHA] = calc.astroCalculator.GetSunAngleTime(dayPortions[DAY_TIME_ISHA], calc.defaultAngles[DAY_TIME_ISHA], astronomical.DIRECTION_CW)
+	if calc.method.MaghribOffset.IsAngle() {
+		prayerTimes[DAY_TIME_MAGHRIB] = calc.astroCalculator.GetSunAngleTime(dayPortions[DAY_TIME_MAGHRIB], calc.method.MaghribOffset.Angle(), astronomical.DIRECTION_CW)
+	} else {
+		prayerTimes[DAY_TIME_MAGHRIB] = getShiftedTime(prayerTimes[calc.method.MaghribOffset.From], calc.method.MaghribOffset)
+	}
+
+	if calc.method.IshaOffset.IsAngle() {
+		prayerTimes[DAY_TIME_ISHA] = calc.astroCalculator.GetSunAngleTime(dayPortions[DAY_TIME_ISHA], calc.method.IshaOffset.Angle(), astronomical.DIRECTION_CW)
+	} else {
+		prayerTimes[DAY_TIME_ISHA] = getShiftedTime(prayerTimes[calc.method.IshaOffset.From], calc.method.IshaOffset)
+	}
 
 	// TODO: Fix bug, Refix hour
 	prayerTimes[DAY_TIME_NESFULLAIL] = prayerTimes[DAY_TIME_GHOROUB] + dmath.FixHour(prayerTimes[DAY_TIME_ISHRAQ]-prayerTimes[DAY_TIME_GHOROUB])/2
@@ -92,14 +91,8 @@ func (calc PrayerTimesCalculator) computePrayerTimes(dayPortions map[string]floa
 	return prayerTimes
 }
 
-func (calc PrayerTimesCalculator) applyMethodShifts(prayerTimes map[string]float64) map[string]float64 {
-	for prayerName, shift := range calc.prayerShift {
-		if _, exists := prayerTimes[shift.from]; !exists {
-			panic("TODO: some error!")
-		}
-		prayerTimes[prayerName] = prayerTimes[shift.from] + shift.value/60
-	}
-	return prayerTimes
+func getShiftedTime(value float64, shift MethodOffest) float64 {
+	return value + shift.Value/60
 }
 
 func (calc PrayerTimesCalculator) fixTimezone(prayerTimes map[string]float64) map[string]float64 {

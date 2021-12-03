@@ -14,8 +14,19 @@ type MethodOffest struct {
 	From  string
 }
 
-func newOffset(value float64, unit OffsetUnit) MethodOffest {
-	return MethodOffest{Value: value, Unit: unit}
+// Angle returns the offset angle in degrees, if it's of type Angle.
+//
+// Otherwise, it returns 0
+func (offset MethodOffest) Angle() float64 {
+	if offset.IsAngle() {
+		return offset.Value
+	}
+	return 0
+}
+
+// IsAngle checks whether the offset is of type angle or not
+func (offset MethodOffest) IsAngle() bool {
+	return offset.Unit == OFFSET_UNIT_DEGREES
 }
 
 type Mathhab int
@@ -55,56 +66,46 @@ var (
 		Name: "Muslim World League",
 		Key:  "MWL",
 
-		DhuhrOffset:       newOffset(0, OFFSET_UNIT_MINUTES),
-		AsrFactor:         ASR_FACTOR_ONE,
-		MaghribOffset:     newOffset(0, OFFSET_UNIT_MINUTES),
-		IshaOffset:        newOffset(17, OFFSET_UNIT_DEGREES),
-		NesfullailMathhab: MATHHAB_STANDARD,
-		FajrOffset:        newOffset(18, OFFSET_UNIT_DEGREES),
+		AsrFactor:     ASR_FACTOR_ONE,
+		MaghribOffset: MethodOffest{Value: 0, Unit: OFFSET_UNIT_MINUTES, From: DAY_TIME_GHOROUB},
+		IshaOffset:    MethodOffest{Value: 17, Unit: OFFSET_UNIT_DEGREES},
+		FajrOffset:    MethodOffest{Value: 18, Unit: OFFSET_UNIT_DEGREES},
 	}
 	ISNA_CALCULATION_METHOD CalculationMethod = CalculationMethod{
 		Name: "Islamic Society of North America",
 		Key:  "ISNA",
 
-		DhuhrOffset:       newOffset(0, OFFSET_UNIT_MINUTES),
-		AsrFactor:         ASR_FACTOR_ONE,
-		MaghribOffset:     newOffset(0, OFFSET_UNIT_MINUTES),
-		IshaOffset:        newOffset(15, OFFSET_UNIT_DEGREES),
-		NesfullailMathhab: MATHHAB_STANDARD,
-		FajrOffset:        newOffset(15, OFFSET_UNIT_DEGREES),
+		AsrFactor:     ASR_FACTOR_ONE,
+		MaghribOffset: MethodOffest{Value: 0, Unit: OFFSET_UNIT_MINUTES, From: DAY_TIME_GHOROUB},
+		IshaOffset:    MethodOffest{Value: 15, Unit: OFFSET_UNIT_DEGREES},
+		FajrOffset:    MethodOffest{Value: 15, Unit: OFFSET_UNIT_DEGREES},
 	}
 	EGSA_CALCULATION_METHOD CalculationMethod = CalculationMethod{
 		Name: "Egyptian General Survey Authority",
 		Key:  "EGSA",
 
-		DhuhrOffset:       newOffset(0, OFFSET_UNIT_MINUTES),
-		AsrFactor:         ASR_FACTOR_ONE,
-		MaghribOffset:     newOffset(0, OFFSET_UNIT_MINUTES),
-		IshaOffset:        newOffset(17.5, OFFSET_UNIT_DEGREES),
-		NesfullailMathhab: MATHHAB_STANDARD,
-		FajrOffset:        newOffset(19.5, OFFSET_UNIT_DEGREES),
+		AsrFactor:     ASR_FACTOR_ONE,
+		MaghribOffset: MethodOffest{Value: 0, Unit: OFFSET_UNIT_MINUTES, From: DAY_TIME_GHOROUB},
+		IshaOffset:    MethodOffest{Value: 17.5, Unit: OFFSET_UNIT_DEGREES},
+		FajrOffset:    MethodOffest{Value: 19.5, Unit: OFFSET_UNIT_DEGREES},
 	}
 	UQU_CALCULATION_METHOD CalculationMethod = CalculationMethod{
 		Name: "Umm Al-Qura University, Makkah",
 		Key:  "UQU",
 
-		DhuhrOffset:       newOffset(0, OFFSET_UNIT_MINUTES),
-		AsrFactor:         ASR_FACTOR_ONE,
-		MaghribOffset:     newOffset(0, OFFSET_UNIT_MINUTES),
-		IshaOffset:        newOffset(90, OFFSET_UNIT_MINUTES),
-		NesfullailMathhab: MATHHAB_STANDARD,
-		FajrOffset:        newOffset(18.5, OFFSET_UNIT_DEGREES),
+		AsrFactor:     ASR_FACTOR_ONE,
+		MaghribOffset: MethodOffest{Value: 0, Unit: OFFSET_UNIT_MINUTES, From: DAY_TIME_GHOROUB},
+		IshaOffset:    MethodOffest{Value: 90, Unit: OFFSET_UNIT_MINUTES, From: DAY_TIME_MAGHRIB},
+		FajrOffset:    MethodOffest{Value: 18.5, Unit: OFFSET_UNIT_DEGREES},
 	}
 	UOK_CALCULATION_METHOD CalculationMethod = CalculationMethod{
 		Name: "University of Islamic Studies, Karachi",
 		Key:  "UOK",
 
-		DhuhrOffset:       newOffset(0, OFFSET_UNIT_MINUTES),
-		AsrFactor:         ASR_FACTOR_ONE,
-		MaghribOffset:     newOffset(0, OFFSET_UNIT_MINUTES),
-		IshaOffset:        newOffset(18, OFFSET_UNIT_DEGREES),
-		NesfullailMathhab: MATHHAB_STANDARD,
-		FajrOffset:        newOffset(18, OFFSET_UNIT_DEGREES),
+		AsrFactor:     ASR_FACTOR_ONE,
+		MaghribOffset: MethodOffest{Value: 0, Unit: OFFSET_UNIT_MINUTES, From: DAY_TIME_GHOROUB},
+		IshaOffset:    MethodOffest{Value: 18, Unit: OFFSET_UNIT_DEGREES},
+		FajrOffset:    MethodOffest{Value: 18, Unit: OFFSET_UNIT_DEGREES},
 	}
 )
 
