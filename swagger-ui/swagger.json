@@ -95,7 +95,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "text/plain": {
+              "application/json": {
                 "schema": {
                   "required": [
                     "prayers"
