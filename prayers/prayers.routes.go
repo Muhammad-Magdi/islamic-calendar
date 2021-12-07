@@ -32,7 +32,7 @@ func (PrayersRouter) GetPrayerTimes(c *gin.Context) {
 			astronomical.Spacetime{
 				Lng:      params.Long,
 				Lat:      params.Lat,
-				Timezone: params.Timezone,
+				Timezone: *params.Timezone,
 				Date:     day,
 			})
 		times := calculator.GetPrayerTimes()
