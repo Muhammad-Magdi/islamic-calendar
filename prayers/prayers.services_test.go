@@ -10,7 +10,7 @@ import (
 
 const EPS = 1e-6
 
-func TestComputePrayerTimes(t *testing.T) {
+func getTestSetup() (PrayerTimesCalculator, map[string]float64) {
 	cairoLng, cairoLat, cairoTimezone := 31.24967, 30.06263, 2
 	config := astronomical.Spacetime{
 		Lng:      cairoLng,
@@ -32,10 +32,30 @@ func TestComputePrayerTimes(t *testing.T) {
 		DAY_TIME_ISHA:    18.454795,
 	}
 
+	return calculator, expectedTimes
+}
+
+func TestComputePrayerTimes(t *testing.T) {
+	calculator, expectedTimes := getTestSetup()
+
 	times := calculator.GetPrayerTimes()
 	for prayerName, expectedTime := range expectedTimes {
 		if math.Abs(expectedTime-times[prayerName]) > EPS {
 			t.Errorf("Error in %s: expected at %f, found at %f", prayerName, expectedTime, times[prayerName])
+		}
+	}
+
+}
+
+func BenchmarkComputePrayerTimes(b *testing.B) {
+	calculator, expectedTimes := getTestSetup()
+
+	for i := 0; i < b.N; i++ {
+		times := calculator.GetPrayerTimes()
+		for prayerName, expectedTime := range expectedTimes {
+			if math.Abs(expectedTime-times[prayerName]) > EPS {
+				b.Errorf("Error in %s: expected at %f, found at %f", prayerName, expectedTime, times[prayerName])
+			}
 		}
 	}
 
