@@ -64,23 +64,23 @@ func (calc PrayerTimesCalculator) computePrayerTimes(dayPortions map[string]floa
 
 	// prayerTimes[DAY_TIME_IMSAK] = calc.astroCalculator.GetSunAngleTime(dayPortions[DAY_TIME_IMSAK], calc.defaultAngles[DAY_TIME_IMSAK], astronomical.DIRECTION_CCW)
 	if calc.method.FajrOffset.IsAngle() {
-		prayerTimes[DAY_TIME_FAJR] = calc.astroCalculator.GetSunAngleTime(dayPortions[DAY_TIME_FAJR], calc.method.FajrOffset.Angle(), astronomical.DIRECTION_CCW)
+		prayerTimes[DAY_TIME_FAJR] = calc.astroCalculator.GetBySunAngle(dayPortions[DAY_TIME_FAJR], calc.method.FajrOffset.Angle(), astronomical.DIRECTION_CCW)
 	}
-	prayerTimes[DAY_TIME_ISHRAQ] = calc.astroCalculator.GetSunAngleTime(dayPortions[DAY_TIME_ISHRAQ], calc.defaultAngles[DAY_TIME_ISHRAQ], astronomical.DIRECTION_CCW)
+	prayerTimes[DAY_TIME_ISHRAQ] = calc.astroCalculator.GetBySunAngle(dayPortions[DAY_TIME_ISHRAQ], calc.defaultAngles[DAY_TIME_ISHRAQ], astronomical.DIRECTION_CCW)
 
 	prayerTimes[DAY_TIME_DHUHR] = calc.astroCalculator.GetMidDayTime(dayPortions[DAY_TIME_DHUHR])
 
-	prayerTimes[DAY_TIME_ASR] = calc.astroCalculator.GetAsrTime(dayPortions[DAY_TIME_ASR], float64(calc.method.AsrFactor))
+	prayerTimes[DAY_TIME_ASR] = calc.astroCalculator.GetByShadowRatio(dayPortions[DAY_TIME_ASR], float64(calc.method.AsrFactor))
 
-	prayerTimes[DAY_TIME_GHOROUB] = calc.astroCalculator.GetSunAngleTime(dayPortions[DAY_TIME_GHOROUB], calc.defaultAngles[DAY_TIME_GHOROUB], astronomical.DIRECTION_CW)
+	prayerTimes[DAY_TIME_GHOROUB] = calc.astroCalculator.GetBySunAngle(dayPortions[DAY_TIME_GHOROUB], calc.defaultAngles[DAY_TIME_GHOROUB], astronomical.DIRECTION_CW)
 	if calc.method.MaghribOffset.IsAngle() {
-		prayerTimes[DAY_TIME_MAGHRIB] = calc.astroCalculator.GetSunAngleTime(dayPortions[DAY_TIME_MAGHRIB], calc.method.MaghribOffset.Angle(), astronomical.DIRECTION_CW)
+		prayerTimes[DAY_TIME_MAGHRIB] = calc.astroCalculator.GetBySunAngle(dayPortions[DAY_TIME_MAGHRIB], calc.method.MaghribOffset.Angle(), astronomical.DIRECTION_CW)
 	} else {
 		prayerTimes[DAY_TIME_MAGHRIB] = getShiftedTime(prayerTimes[calc.method.MaghribOffset.From], calc.method.MaghribOffset)
 	}
 
 	if calc.method.IshaOffset.IsAngle() {
-		prayerTimes[DAY_TIME_ISHA] = calc.astroCalculator.GetSunAngleTime(dayPortions[DAY_TIME_ISHA], calc.method.IshaOffset.Angle(), astronomical.DIRECTION_CW)
+		prayerTimes[DAY_TIME_ISHA] = calc.astroCalculator.GetBySunAngle(dayPortions[DAY_TIME_ISHA], calc.method.IshaOffset.Angle(), astronomical.DIRECTION_CW)
 	} else {
 		prayerTimes[DAY_TIME_ISHA] = getShiftedTime(prayerTimes[calc.method.IshaOffset.From], calc.method.IshaOffset)
 	}

@@ -28,6 +28,7 @@ func NewTimeCalculator(st Spacetime) TimeCalculator {
 	return timeCalculator
 }
 
+// GetMidDayTime returns the time of the mid day i.e. when the sun becomes overhead
 func (calc TimeCalculator) GetMidDayTime(dayPortion float64) float64 {
 	jTime := calc.jDate + dayPortion
 
@@ -37,7 +38,10 @@ func (calc TimeCalculator) GetMidDayTime(dayPortion float64) float64 {
 	return midDay
 }
 
-func (calc TimeCalculator) GetSunAngleTime(dayPortion float64, angle float64, direction string) float64 {
+// GetBySunAngle returns the time of the day given the angle between the sun and the horizon
+//
+// It does NOT work when the angle is 90. Use GetMidDayTime instead
+func (calc TimeCalculator) GetBySunAngle(dayPortion float64, angle float64, direction string) float64 {
 	jTime := calc.jDate + dayPortion
 
 	decl := NewSunPosition(jTime).Declination()
@@ -52,13 +56,14 @@ func (calc TimeCalculator) GetSunAngleTime(dayPortion float64, angle float64, di
 	return midDay + t
 }
 
-func (calc TimeCalculator) GetAsrTime(dayPortion float64, factor float64) float64 {
+// GetByShadowRatio returns the time of the day given the ratio between a body and its shadow length
+func (calc TimeCalculator) GetByShadowRatio(dayPortion float64, factor float64) float64 {
 	jTime := calc.jDate + dayPortion
 
 	decl := NewSunPosition(jTime).Declination()
 	angle := -dmath.ACot(factor + dmath.Tan(math.Abs(calc.st.Lat-decl)))
 
-	sunAngle := calc.GetSunAngleTime(dayPortion, angle, DIRECTION_CW)
+	sunAngle := calc.GetBySunAngle(dayPortion, angle, DIRECTION_CW)
 
 	return sunAngle
 }
