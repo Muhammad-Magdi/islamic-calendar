@@ -41,7 +41,7 @@ func (calc TimeCalculator) GetMidDayTime(dayPortion float64) float64 {
 // GetBySunAngle returns the time of the day given the angle between the sun and the horizon
 //
 // It does NOT work when the angle is 90. Use GetMidDayTime instead
-func (calc TimeCalculator) GetBySunAngle(dayPortion float64, angle float64, direction string) float64 {
+func (calc TimeCalculator) GetBySunAngle(dayPortion float64, angle float64) float64 {
 	jTime := calc.jDate + dayPortion
 
 	decl := NewSunPosition(jTime).Declination()
@@ -49,7 +49,7 @@ func (calc TimeCalculator) GetBySunAngle(dayPortion float64, angle float64, dire
 	t := (1.0 / 15.0) * dmath.ACos((-dmath.Sin(angle)-dmath.Sin(decl)*dmath.Sin(calc.st.Lat))/(dmath.Cos(decl)*dmath.Cos(calc.st.Lat)))
 
 	midDay := calc.GetMidDayTime(dayPortion)
-	if direction == DIRECTION_CCW {
+	if dayPortion < 0.5 {
 		return midDay - t
 	}
 
@@ -63,7 +63,7 @@ func (calc TimeCalculator) GetByShadowRatio(dayPortion float64, factor float64) 
 	decl := NewSunPosition(jTime).Declination()
 	angle := -dmath.ACot(factor + dmath.Tan(math.Abs(calc.st.Lat-decl)))
 
-	sunAngle := calc.GetBySunAngle(dayPortion, angle, DIRECTION_CW)
+	sunAngle := calc.GetBySunAngle(dayPortion, angle)
 
 	return sunAngle
 }
