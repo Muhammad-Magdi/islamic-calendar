@@ -41,7 +41,6 @@ func NewPrayerTimesCalculator(method CalculationMethod, confing astronomical.Spa
 }
 
 func (calc PrayerTimesCalculator) GetPrayerTimes() map[string]float64 {
-
 	dayPortions := calc.computeDayPortions()
 	prayerTimes := calc.computePrayerTimes(dayPortions)
 	prayerTimes = calc.fixTimezone(prayerTimes)
