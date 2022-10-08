@@ -72,8 +72,8 @@ func TestComputePrayerTimes(t *testing.T) {
 
 		for prayerName, prayerTime := range tc.times {
 			fPrayerTime := convertHH_MMToFloat(prayerTime)
-			if math.Abs(nearestMinute(res[prayerName])-fPrayerTime) > EPS {
-				t.Fatalf("Test failed at day %v. Expected %s prayer at: %f found at %f", date, prayerName, fPrayerTime, nearestMinute(res[prayerName]))
+			if math.Abs(res[prayerName]-fPrayerTime) > EPS {
+				t.Fatalf("Test failed at day %v. Expected %s prayer at: %f found at %f", date, prayerName, fPrayerTime, res[prayerName])
 			}
 		}
 	}
@@ -92,10 +92,6 @@ func BenchmarkComputePrayerTimes(b *testing.B) {
 		}
 	}
 
-}
-
-func nearestMinute(tm float64) float64 {
-	return math.Round(tm*60) / 60
 }
 
 func convertHH_MMToFloat(tm string) float64 {
