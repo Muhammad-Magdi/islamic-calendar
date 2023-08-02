@@ -14,3 +14,8 @@ Using various methods of calculation.
 
 - praytimes.org
 - ummulqura.org.sa/default.aspx
+
+## Environment Variables
+
+- APP_ENV
+- PORT
