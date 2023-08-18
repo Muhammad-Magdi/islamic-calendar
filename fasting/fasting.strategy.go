@@ -10,3 +10,11 @@ const (
 type FastingStrategy interface {
 	GetTodaysHijriDate() (HijriDate, error)
 }
+
+func NewFastingStrategy(strategy FASTING_STRATEGY) FastingStrategy {
+	switch strategy {
+	case SCRAPPING:
+		return NewFastingScraper()
+	}
+	return nil
+}

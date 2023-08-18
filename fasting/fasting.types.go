@@ -6,11 +6,7 @@ import (
 )
 
 type FastingDaysQueryParams struct {
-	Long float64 `json:"long" form:"long" binding:"required"`
-	Lat  float64 `json:"lat" form:"lat" binding:"required"`
-	// Country  string    // TODO: Replace this type with an enum or so
-	DateFrom time.Time `json:"date_from" form:"date_from" time_format:"2006-01-02" binding:"required"`
-	DateTo   time.Time `json:"date_to" form:"date_to" time_format:"2006-01-02" binding:"required"`
+	Strategy FASTING_STRATEGY `json:"strategy" form:"strategy" binding:"required"`
 }
 
 type HijriMonth int

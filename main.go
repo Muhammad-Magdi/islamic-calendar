@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/muhammad-magdi/islamic-calendar/fasting"
 	"github.com/muhammad-magdi/islamic-calendar/prayers"
 )
 
@@ -25,6 +26,9 @@ func main() {
 	prayersRouter := prayers.NewPrayersRouter()
 	r.GET("/v0/prayer-times", prayersRouter.GetPrayerTimes)
 	r.GET("/v0/calculation-methods", prayersRouter.GetCalculationMethods)
+
+	fastingRouter := fasting.NewFastingRouter(fasting.NewFastingService())
+	r.GET("/v0/current-month-fasting-days", fastingRouter.GetCurrentMonthFastingDays)
 
 	r.Static("/docs", "./swagger-ui")
 
